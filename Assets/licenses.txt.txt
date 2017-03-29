@@ -1,0 +1,4 @@
+Sprites
+  http://opengameart.org/content/a-platformer-in-the-forest
+Sounds
+  http://opengameart.org/content/rpg-sound-pack
