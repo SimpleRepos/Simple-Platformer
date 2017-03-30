@@ -8,16 +8,12 @@ public class SnekController : MonoBehaviour {
     public float WALK_DELAY;
 
     private float walkDelay;
-    private Animator anim;
     private Rigidbody2D rb;
     private EdgeCollider2D edgeFinder;
-    private BoxCollider2D colliderBox;
 
 	void Start () {
-        anim = GetComponent<Animator>();
         rb = GetComponent<Rigidbody2D>();
         edgeFinder = GetComponent<EdgeCollider2D>();
-        colliderBox = GetComponent<BoxCollider2D>();
         walkDelay = WALK_DELAY;
     }
 
