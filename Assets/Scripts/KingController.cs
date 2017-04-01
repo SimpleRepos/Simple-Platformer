@@ -6,7 +6,7 @@ public class KingController : MonoBehaviour {
 
     private Animator anim;
     private Rigidbody2D rb;
-    private CircleCollider2D sensor;
+    private Collider2D sensor;
     private SpriteRenderer spriteRenderer;
     private AudioSource[] sounds;
     private enum SoundID
@@ -14,7 +14,8 @@ public class KingController : MonoBehaviour {
         STEP_LEFT = 0,
         STEP_RIGHT = 1,
         JUMP = 2,
-        DIE = 3
+        DIE = 3,
+        HOP_ON_FOE = 4
     };
 
     public float JUMP_POOL_SECONDS;
@@ -31,8 +32,7 @@ public class KingController : MonoBehaviour {
 
     public void damage(int amount)
     {
-        var col = GetComponent<CapsuleCollider2D>();
-        Destroy(col);
+        foreach (var col in GetComponents<Collider2D>()) { Destroy(col); }
         dead = true;
         sounds[(int)SoundID.DIE].Play();
     }
@@ -40,10 +40,27 @@ public class KingController : MonoBehaviour {
     void Start () {
         anim = GetComponent<Animator>();
         rb = GetComponent<Rigidbody2D>();
-        sensor = GetComponent<CircleCollider2D>();
+        sensor = GetComponent<BoxCollider2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
         sounds = GetComponents<AudioSource>();
         stepSoundDelay = STEP_SOUND_DELAY;
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        
+        var script = collision.gameObject.GetComponent<SnekController>();
+        if (script) {
+            sounds[(int)SoundID.HOP_ON_FOE].Play();
+            script.damage(1);
+
+            jumpPool = JUMP_POOL_SECONDS;
+
+            Vector2 vel = rb.velocity;
+            vel.y = JUMP_SPEED;
+            rb.velocity = vel;
+
+        }
     }
 
     void Update () {

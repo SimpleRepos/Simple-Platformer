@@ -14,6 +14,9 @@ public class SpawnScript : MonoBehaviour {
     void Start()
     {
         camScript = GameObject.Find("Camera").GetComponent<CameraFix>();
+        current = GameObject.Find("King");
+        camScript.King = current;
+        
     }
 
     void Update () {
@@ -26,7 +29,8 @@ public class SpawnScript : MonoBehaviour {
 
     private void doSpawn()
     {
-        camScript.King = current = Instantiate(king);
+        current = Instantiate(king);
+        camScript.King = current;
         spawnDelay = SPAWN_DELAY_SECONDS;
     }
 }
