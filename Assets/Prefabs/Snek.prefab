@@ -124,6 +124,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   WALK_SPEED: 2
   WALK_DELAY: 0.25
+  FALL_CUTOFF: -4
 --- !u!212 &212854616096189542
 SpriteRenderer:
   m_ObjectHideFlags: 1

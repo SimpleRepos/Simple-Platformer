@@ -6,6 +6,7 @@ public class SnekController : MonoBehaviour {
 
     public float WALK_SPEED;
     public float WALK_DELAY;
+    public float FALL_CUTOFF;
 
     private float walkDelay;
     private Rigidbody2D rb;
@@ -19,6 +20,12 @@ public class SnekController : MonoBehaviour {
     }
 
     void Update () {
+        if (transform.position.y < FALL_CUTOFF)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
         if (dead)
         {
             transform.Rotate(new Vector3(0, 0, 1), Time.deltaTime * 1000);
@@ -40,7 +47,8 @@ public class SnekController : MonoBehaviour {
             rb.velocity = vel;
             walkDelay = WALK_DELAY;
         }
-	}
+
+    }
 
     void OnCollisionEnter2D(Collision2D collision)
     {
