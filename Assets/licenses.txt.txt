@@ -1,5 +1,6 @@
 Sprites
   http://opengameart.org/content/a-platformer-in-the-forest
+  http://opengameart.org/content/old-frogatto-tile-art
 Sounds
   http://opengameart.org/content/rpg-sound-pack
 

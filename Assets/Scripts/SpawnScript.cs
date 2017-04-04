@@ -7,11 +7,17 @@ public class SpawnScript : MonoBehaviour {
     public GameObject king;
     public GameObject snek;
     public float SPAWN_DELAY_SECONDS;
-    public float snekPopulation;
+    public int INITIAL_POPULATION;
+    public float GROWTH_RATE;
+
+    public Scorekeeper scoreboard;
 
     private GameObject current;
     private CameraFix camScript;
     private float spawnDelay = 0;
+    private float snekDelay = 0;
+
+    private float startTime;
 
     private const float LEFT_LIMIT = -11;
     private const float RIGHT_LIMIT = 16;
@@ -22,29 +28,49 @@ public class SpawnScript : MonoBehaviour {
         camScript = GameObject.Find("Camera").GetComponent<CameraFix>();
         current = GameObject.Find("King");
         camScript.King = current;
-        //Time.timeScale = 0.25f;
+    }
+
+    public void restart()
+    {
+        foreach (var sscript in FindObjectsOfType<SnekController>()) { Destroy(sscript.gameObject); }
+        startTime = Time.time;
+        scoreboard.reset();
     }
 
     void Update () {
         if (!current)
         {
             spawnDelay -= Time.deltaTime;
-            if (spawnDelay <= 0) { doSpawn(); }
+            if (spawnDelay <= 0) { spawnKing(); }
         }
 
-        if (FindObjectsOfType<SnekController>().Length < snekPopulation) { spawnSnek(); }
+        if (snekDelay <= 0)
+        {
+            int targetPopulation = INITIAL_POPULATION + (int)((Time.time - startTime) / GROWTH_RATE);
+            int pop = FindObjectsOfType<SnekController>().Length;
+            if (pop < targetPopulation) { spawnSnek(); }
+            scoreboard.Population = pop + 1;
+        }
+        else
+        {
+            snekDelay -= Time.deltaTime;
+        }
     }
 
     private void spawnSnek()
     {
         float x = Random.Range(LEFT_LIMIT, RIGHT_LIMIT);
-        Instantiate(snek, new Vector3(x, SNEK_SPAWN_HEIGHT, 0), Quaternion.identity);
+        GameObject noob = Instantiate(snek, new Vector3(x, SNEK_SPAWN_HEIGHT, 0), Quaternion.identity);
+        noob.GetComponent<SnekController>().scoreboard = scoreboard;
+        snekDelay = SPAWN_DELAY_SECONDS;
     }
 
-    private void doSpawn()
+    private void spawnKing()
     {
         current = Instantiate(king);
+        current.GetComponent<KingController>().scoreboard = scoreboard;
         camScript.King = current;
         spawnDelay = SPAWN_DELAY_SECONDS;
+        restart();
     }
 }

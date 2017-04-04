@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class KingController : MonoBehaviour {
 
+    public Scorekeeper scoreboard;
+
     private Animator anim;
     private Rigidbody2D rb;
     private Collider2D sensor;
@@ -29,6 +31,8 @@ public class KingController : MonoBehaviour {
     private bool secondStep = false;
     private bool dead = false;
     private bool canJumpSound = false;
+    private bool canDoubleScore = false;
+    private int groundMask;
 
     public void damage(int amount)
     {
@@ -44,22 +48,25 @@ public class KingController : MonoBehaviour {
         spriteRenderer = GetComponent<SpriteRenderer>();
         sounds = GetComponents<AudioSource>();
         stepSoundDelay = STEP_SOUND_DELAY;
+        groundMask = LayerMask.GetMask("Ground");
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        
         var script = collision.gameObject.GetComponent<SnekController>();
         if (script) {
             sounds[(int)SoundID.HOP_ON_FOE].Play();
             script.damage(1);
 
+            int points = canDoubleScore ? 2 : 1;
+            scoreboard.Score = scoreboard.Score + points;
+
             jumpPool = JUMP_POOL_SECONDS;
+            canDoubleScore = true;
 
             Vector2 vel = rb.velocity;
             vel.y = JUMP_SPEED;
             rb.velocity = vel;
-
         }
     }
 
@@ -76,7 +83,8 @@ public class KingController : MonoBehaviour {
         }
 
         //gather data
-        bool grounded = sensor.IsTouchingLayers(LayerMask.GetMask("Ground"));
+        bool grounded = sensor.IsTouchingLayers(groundMask);
+        if (grounded) { canDoubleScore = false; }
         bool jumpKey = Input.GetButton("Jump");
         float horz = Input.GetAxis("Horizontal");
 
@@ -98,9 +106,7 @@ public class KingController : MonoBehaviour {
         }
 
         //process jumping
-        if (!grounded && !jumpKey) {
-            jumpPool = 0;
-        }
+        if (!grounded && !jumpKey) { jumpPool = 0; }
 
         if (jumpKey && (jumpPool > 0)) {
             if (canJumpSound) { sounds[(int)SoundID.JUMP].Play(); }

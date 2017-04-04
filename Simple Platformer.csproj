@@ -80,6 +80,8 @@
   <ItemGroup>
     <Compile Include="Assets\Scripts\CameraFix.cs" />
     <Compile Include="Assets\Scripts\KingController.cs" />
+    <Compile Include="Assets\Scripts\OutlinedTextScript.cs" />
+    <Compile Include="Assets\Scripts\Scorekeeper.cs" />
     <Compile Include="Assets\Scripts\SnekController.cs" />
     <Compile Include="Assets\Scripts\SpawnScript.cs" />
   </ItemGroup>
