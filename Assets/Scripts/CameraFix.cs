@@ -7,6 +7,8 @@ public class CameraFix : MonoBehaviour {
     public float VSCROLL_SPEED;
     public float HSCROLL_SPEED;
 
+    public float Y_LOWER_LIMIT;
+
     private List<BoxCollider2D> boxes;
     private BoxCollider2D outerBox;
 
@@ -65,8 +67,10 @@ public class CameraFix : MonoBehaviour {
                 if (kp.y > top)    { motion.y = kp.y - top; }
             }
 
+            Vector3 pos = transform.position + motion;
+            pos.y = Mathf.Max(pos.y, Y_LOWER_LIMIT);
 
-            transform.position = transform.position + motion;
+            transform.position = pos;
         }
     }
 }

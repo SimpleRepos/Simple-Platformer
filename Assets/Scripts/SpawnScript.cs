@@ -19,9 +19,9 @@ public class SpawnScript : MonoBehaviour {
 
     private float startTime;
 
-    private const float LEFT_LIMIT = -11;
-    private const float RIGHT_LIMIT = 16;
-    private const float SNEK_SPAWN_HEIGHT = 8;
+    public float LEFT_LIMIT = -11;
+    public float RIGHT_LIMIT = 16;
+    public float SNEK_SPAWN_HEIGHT = 8;
 
     void Start()
     {
