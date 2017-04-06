@@ -6,22 +6,23 @@ public class BackgroundScroller : MonoBehaviour {
 
     public Camera cam;
     public float HORIZONTAL_FACTOR;
+    public float VERTICAL_FACTOR;
 
     private Transform camTrans;
-    private float CAM_START_X;
+    private Vector3 CAM_START;
+    private Vector3 BG_START;
 
     private void Start()
     {
         camTrans = cam.transform;
-        CAM_START_X = camTrans.position.x;
+        CAM_START = camTrans.position;
+        BG_START = transform.position;
     }
 
     void Update () {
-        float camOffset = camTrans.position.x - CAM_START_X;
-        float bgOffset = camOffset * HORIZONTAL_FACTOR;
-
-        Vector3 pos = transform.position;
-        pos.x = bgOffset;
-        transform.position = pos;
+        Vector3 offset = camTrans.position - CAM_START;
+        offset.x *= HORIZONTAL_FACTOR;
+        offset.y *= VERTICAL_FACTOR;
+        transform.position = BG_START + offset;
     }
 }
